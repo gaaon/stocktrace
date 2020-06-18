@@ -4,7 +4,9 @@
   "description": "keep tracks on my stock",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "lerna run start --scope=stocktrace-web",
+    "build": "lerna bootstrap"
   },
   "repository": {
     "type": "git",
@@ -18,5 +20,8 @@
   "homepage": "https://github.com/gaaon/stocktrace#readme",
   "devDependencies": {
     "lerna": "^3.22.1"
+  },
+  "engines": {
+    "node": "14.x"
   }
 }
