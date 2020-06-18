@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "cross-env DEBUG=stocktrace-web:* ts-node ./bin/www"
+    "start": "ts-node ./bin/www"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
