@@ -1,7 +1,7 @@
 import {createScheduler, createWorker, OEM, Scheduler} from 'tesseract.js';
 import Jimp from 'jimp';
 
-const COUNT_WORKER = 4;
+const COUNT_WORKER = 1;
 
 let scheduler: Scheduler;
 
