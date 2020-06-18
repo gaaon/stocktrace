@@ -14,7 +14,7 @@ export class Account {
     private _earningRate: number) { }
 }
 
-const totalLinePattern = /([0-9,]+).*원/;
+const totalLinePattern = /([0-9,]+).*[원왼]/;
 const parseTotal = (line: string): number => {
   const matched = totalLinePattern.exec(line);
   if (!matched) {
@@ -24,7 +24,7 @@ const parseTotal = (line: string): number => {
   return parseInt(matched[1].replace(/,/g, ''), 10);
 };
 
-const earningAmountAndRatePattern = /([0-9,+\-]+).*원[^(0-9.+\-)]*([0-9.+\-]+)%/
+const earningAmountAndRatePattern = /([0-9,+\-]+).*[원왼][^(0-9.+\-)]*([0-9.+\-]+)%/
 const parseEarningAmountAndRate = (line: string): [number, number] => {
   const matched = earningAmountAndRatePattern.exec(line);
   if (!matched) {
