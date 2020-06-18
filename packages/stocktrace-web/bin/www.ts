@@ -28,20 +28,9 @@ const server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-(async () => {
-  await initScheduler();
-
-  server.listen(port);
-  server.on('error', onError);
-  server.on('listening', onListening);
-  server.on('close', async () => {
-    await closeScheduler();
-  });
-
-  process.on('SIGINT', function() {
-    server.close();
-  });
-})()
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.

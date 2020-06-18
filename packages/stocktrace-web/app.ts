@@ -2,7 +2,6 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import initStockRouter from './routes/api/stocks';
-import {initScheduler} from 'stocktrace-ocr';
 
 const app = express();
 
