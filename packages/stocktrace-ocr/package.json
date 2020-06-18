@@ -1,0 +1,28 @@
+{
+  "name": "stocktrace-ocr",
+  "version": "0.1.0",
+  "description": "service to make ocr for stock screenshot",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "test": "rimraf *.traineddata && jest -i",
+    "compile": "tsc",
+    "prepare": "npm run compile"
+  },
+  "author": "gaaon <xodn4195@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/preset-env": "^7.10.2",
+    "@babel/preset-typescript": "^7.10.1",
+    "@types/jest": "^26.0.0",
+    "@types/node": "^14.0.13",
+    "jest": "^26.0.1",
+    "rimraf": "^3.0.2",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.5"
+  },
+  "dependencies": {
+    "jimp": "^0.13.0",
+    "tesseract.js": "^2.1.1"
+  }
+}

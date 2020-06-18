@@ -1,0 +1,22 @@
+{
+  "name": "stocktrace",
+  "version": "0.1.0",
+  "description": "keep tracks on my stock",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gaaon/stocktrace.git"
+  },
+  "author": "gaaon <xodn4195@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gaaon/stocktrace/issues"
+  },
+  "homepage": "https://github.com/gaaon/stocktrace#readme",
+  "devDependencies": {
+    "lerna": "^3.22.1"
+  }
+}
