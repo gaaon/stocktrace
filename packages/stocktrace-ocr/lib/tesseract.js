@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.recognize = exports.recognizeWithJimp = exports.recognizeLocalFile = exports.recognizeBuffer = exports.closeScheduler = exports.initScheduler = void 0;
 var tesseract_js_1 = require("tesseract.js");
 var jimp_1 = __importDefault(require("jimp"));
-var COUNT_WORKER = 4;
+var COUNT_WORKER = 1;
 var scheduler;
 exports.initScheduler = function () { return __awaiter(void 0, void 0, void 0, function () {
     var i, logger, worker;

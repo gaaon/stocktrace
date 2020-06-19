@@ -1,6 +1,6 @@
 import {Application, NextFunction, Request, Response, Router} from 'express';
 import multer, { memoryStorage } from 'multer';
-import {closeScheduler, recognize, recognizeBuffer} from 'stocktrace-ocr/lib/tesseract';
+import {closeScheduler, recognizeBuffer} from 'stocktrace-ocr';
 import {initScheduler, parseOCR} from 'stocktrace-ocr';
 import createDebug from 'debug';
 
@@ -18,6 +18,7 @@ router.post('/upload',
   upload.single('img'),
   (req: Request, res: Response, next: NextFunction) => {
     console.log(req.file);
+    console.log(req.body);
 
     (async () => {
       await initScheduler();
@@ -27,6 +28,7 @@ router.post('/upload',
         const res = await recognizeBuffer(req.file.buffer);
         const stockHistory = await parseOCR(res.data.text);
         console.log(stockHistory);
+
       } catch (e) {
         console.error(e);
       } finally {

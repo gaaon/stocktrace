@@ -61,7 +61,7 @@ var Account = /** @class */ (function () {
     return Account;
 }());
 exports.Account = Account;
-var totalLinePattern = /([0-9,]+).*원/;
+var totalLinePattern = /([0-9,]+).*[원왼]/;
 var parseTotal = function (line) {
     var matched = totalLinePattern.exec(line);
     if (!matched) {
@@ -69,7 +69,7 @@ var parseTotal = function (line) {
     }
     return parseInt(matched[1].replace(/,/g, ''), 10);
 };
-var earningAmountAndRatePattern = /([0-9,+\-]+).*원[^(0-9.+\-)]*([0-9.+\-]+)%/;
+var earningAmountAndRatePattern = /([0-9,+\-]+).*[원왼][^(0-9.+\-)]*([0-9.+\-]+)%/;
 var parseEarningAmountAndRate = function (line) {
     var matched = earningAmountAndRatePattern.exec(line);
     if (!matched) {

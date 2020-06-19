@@ -1,8 +1,18 @@
 export class StockHistory {
+  private _createdAt: number = 0;
+
   public constructor(private _accounts: Account[]) { }
 
   get accounts(): Account[] {
     return this._accounts;
+  }
+
+  set createdAt(createdAt: number) {
+    this._createdAt = createdAt;
+  }
+
+  get createdAt(): number {
+    return this._createdAt
   }
 }
 
