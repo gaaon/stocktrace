@@ -32,8 +32,13 @@ export class StockHistory {
     }, 0);
   }
 
+  private sumEarningRate(): number {
+    return this._accounts.reduce((acc: number, cur: Account) => {
+      return acc + cur.earningRate;
+    }, 0);
+  }
   public earningRateStr(): string {
-    return (this._earningAmount / this._principal * 100).toFixed(2);
+    return (this.sumEarningRate() / this._principal * 100).toFixed(2);
   }
 }
 
@@ -46,6 +51,10 @@ export class Account {
 
   get total(): number {
     return this._total;
+  }
+
+  get earningRate(): number {
+    return this._earningRate;
   }
 
   public earningRateStr(): string {
@@ -93,16 +102,6 @@ const parsePrincipal = (line: string): number => {
   return parseInt(matched[1].replace(/,/g, ''), 10);
 }
 
-const totalEarningRatePattern = /[가-힣 ]+([0-9-,]+)/;
-const parseTotalEarningRate = (line: string): number => {
-  const matched = totalEarningRatePattern.exec(line);
-  if (!matched) {
-    throw new Error(`wrong total earning rate format: ${line}`);
-  }
-
-  return parseFloat(matched[1].replace(/,/g, ''));
-}
-
 export const parseOCR = async (ocrText: string): Promise<StockHistory> => {
   debug(ocrText);
 
@@ -117,7 +116,7 @@ export const parseOCR = async (ocrText: string): Promise<StockHistory> => {
     if (lines[i] === '총자산') {
       ++i;
       principal = parsePrincipal(lines[++i]);
-      totalEarningAmount = parseTotalEarningRate(lines[++i]);
+      continue;
     }
 
     const id = parseAccountID(lines[i]);
