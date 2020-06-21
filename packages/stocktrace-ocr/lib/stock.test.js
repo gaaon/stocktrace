@@ -43,7 +43,7 @@ var fs_1 = __importDefault(require("fs"));
 var stock_1 = require("./stock");
 describe('stock ocr parse', function () {
     it('should return stock history instance.', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var filePath, fileRaw, expectedStockHistoryPath, expectedStockHistory, _a, _b, stockHistory, i, account, expectedAccount;
+        var filePath, fileRaw, expectedStockHistoryPath, expectedStockHistory, _a, _b, stockHistory;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
@@ -60,12 +60,7 @@ describe('stock ocr parse', function () {
                 case 3:
                     stockHistory = _c.sent();
                     // then
-                    expect(stockHistory.accounts).toHaveLength(expectedStockHistory._accounts.length);
-                    for (i = 0; i < stockHistory.accounts.length; i++) {
-                        account = stockHistory.accounts[i];
-                        expectedAccount = expectedStockHistory._accounts[i];
-                        expect(account).toEqual(expectedAccount);
-                    }
+                    expect(expectedStockHistory).toMatchObject(stockHistory);
                     return [2 /*return*/];
             }
         });

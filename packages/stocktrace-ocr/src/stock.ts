@@ -1,18 +1,35 @@
 export class StockHistory {
-  private _createdAt: number = 0;
+  private _createdAt: string = '';
 
-  public constructor(private _accounts: Account[]) { }
+  public constructor(
+    private _accounts: Account[],
+    private _principal: number,
+    private _earningAmount: number) { }
 
   get accounts(): Account[] {
     return this._accounts;
   }
 
-  set createdAt(createdAt: number) {
-    this._createdAt = createdAt;
+  set createdAt(createdAt: string) {
+    if (/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(createdAt)) {
+      this._createdAt = createdAt.replace(/-/g, '. ');
+    } else {
+      throw new Error('invalid createdAt pattern');
+    }
   }
 
-  get createdAt(): number {
-    return this._createdAt
+  get createdAt(): string {
+    return this._createdAt;
+  }
+
+  public total(): number {
+    return this._accounts.reduce((acc: number, cur: Account) => {
+      return acc + cur.total;
+    }, 0);
+  }
+
+  public earningRateStr(): string {
+    return (this._earningAmount / this._principal * 100).toFixed(2);
   }
 }
 
@@ -22,6 +39,14 @@ export class Account {
     private _total: number,
     private _earningAmount: number,
     private _earningRate: number) { }
+
+  get total(): number {
+    return this._total;
+  }
+
+  public earningRateStr(): string {
+    return this._earningRate.toFixed(2);
+  }
 }
 
 const totalLinePattern = /([0-9,]+).*[원왼]/;
@@ -54,13 +79,41 @@ const parseAccountID = (line: string): string|null => {
   return matched ? matched[1] : null;
 }
 
+const principalPattern = /[가-힣 ]+([0-9,]+)/;
+const parsePrincipal = (line: string): number => {
+  const matched = principalPattern.exec(line);
+  if (!matched) {
+    throw new Error(`wrong principal format: ${line}`);
+  }
+
+  return parseInt(matched[1].replace(/,/g, ''), 10);
+}
+
+const totalEarningRatePattern = /[가-힣 ]+([0-9-,]+)/;
+const parseTotalEarningRate = (line: string): number => {
+  const matched = totalEarningRatePattern.exec(line);
+  if (!matched) {
+    throw new Error(`wrong total earning rate format: ${line}`);
+  }
+
+  return parseFloat(matched[1].replace(/,/g, ''));
+}
+
 export const parseOCR = async (ocrText: string): Promise<StockHistory> => {
   const lines = ocrText.split('\n');
 
   let accountIdx = 0;
   const accounts: Account[] = [];
+  let principal = 0;
+  let totalEarningRate = 0;
 
   for (let i = 0; i < lines.length; i++) {
+    if (lines[i] === '총자산') {
+      ++i;
+      principal = parsePrincipal(lines[++i]);
+      totalEarningRate = parseTotalEarningRate(lines[++i]);
+    }
+
     const id = parseAccountID(lines[i]);
     if (id) {
       const total = parseTotal(lines[++i]);
@@ -74,6 +127,6 @@ export const parseOCR = async (ocrText: string): Promise<StockHistory> => {
     }
   }
 
-  return new StockHistory(accounts);
+  return new StockHistory(accounts, principal, totalEarningRate);
 };
 

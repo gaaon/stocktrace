@@ -16,13 +16,6 @@ describe('stock ocr parse', () => {
     const stockHistory = await parseOCR(fileRaw);
 
     // then
-    expect(stockHistory.accounts).toHaveLength(expectedStockHistory._accounts.length);
-
-    for (let i = 0; i < stockHistory.accounts.length; i++) {
-      const account = stockHistory.accounts[i];
-      const expectedAccount = expectedStockHistory._accounts[i];
-
-      expect(account).toEqual(expectedAccount);
-    }
+    expect(expectedStockHistory).toMatchObject(stockHistory);
   });
 });

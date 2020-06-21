@@ -38,8 +38,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseOCR = exports.Account = exports.StockHistory = void 0;
 var StockHistory = /** @class */ (function () {
-    function StockHistory(_accounts) {
+    function StockHistory(_accounts, _principal, _earningAmount) {
         this._accounts = _accounts;
+        this._principal = _principal;
+        this._earningAmount = _earningAmount;
+        this._createdAt = '';
     }
     Object.defineProperty(StockHistory.prototype, "accounts", {
         get: function () {
@@ -48,6 +51,29 @@ var StockHistory = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(StockHistory.prototype, "createdAt", {
+        get: function () {
+            return this._createdAt;
+        },
+        set: function (createdAt) {
+            if (/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(createdAt)) {
+                this._createdAt = createdAt.replace(/-/g, '. ');
+            }
+            else {
+                throw new Error('invalid createdAt pattern');
+            }
+        },
+        enumerable: false,
+        configurable: true
+    });
+    StockHistory.prototype.total = function () {
+        return this._accounts.reduce(function (acc, cur) {
+            return acc + cur.total;
+        }, 0);
+    };
+    StockHistory.prototype.earningRateStr = function () {
+        return (this._earningAmount / this._principal * 100).toFixed(2);
+    };
     return StockHistory;
 }());
 exports.StockHistory = StockHistory;
@@ -58,6 +84,16 @@ var Account = /** @class */ (function () {
         this._earningAmount = _earningAmount;
         this._earningRate = _earningRate;
     }
+    Object.defineProperty(Account.prototype, "total", {
+        get: function () {
+            return this._total;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Account.prototype.earningRateStr = function () {
+        return this._earningRate.toFixed(2);
+    };
     return Account;
 }());
 exports.Account = Account;
@@ -85,13 +121,36 @@ var parseAccountID = function (line) {
     var matched = accountIDLinePattern.exec(line);
     return matched ? matched[1] : null;
 };
+var principalPattern = /[가-힣 ]+([0-9,]+)/;
+var parsePrincipal = function (line) {
+    var matched = principalPattern.exec(line);
+    if (!matched) {
+        throw new Error("wrong principal format: " + line);
+    }
+    return parseInt(matched[1].replace(/,/g, ''), 10);
+};
+var totalEarningRatePattern = /[가-힣 ]+([0-9-,]+)/;
+var parseTotalEarningRate = function (line) {
+    var matched = totalEarningRatePattern.exec(line);
+    if (!matched) {
+        throw new Error("wrong total earning rate format: " + line);
+    }
+    return parseFloat(matched[1].replace(/,/g, ''));
+};
 exports.parseOCR = function (ocrText) { return __awaiter(void 0, void 0, void 0, function () {
-    var lines, accountIdx, accounts, i, id, total, _a, earningAmount, earningRate;
+    var lines, accountIdx, accounts, principal, totalEarningRate, i, id, total, _a, earningAmount, earningRate;
     return __generator(this, function (_b) {
         lines = ocrText.split('\n');
         accountIdx = 0;
         accounts = [];
+        principal = 0;
+        totalEarningRate = 0;
         for (i = 0; i < lines.length; i++) {
+            if (lines[i] === '총자산') {
+                ++i;
+                principal = parsePrincipal(lines[++i]);
+                totalEarningRate = parseTotalEarningRate(lines[++i]);
+            }
             id = parseAccountID(lines[i]);
             if (id) {
                 total = parseTotal(lines[++i]);
@@ -99,6 +158,6 @@ exports.parseOCR = function (ocrText) { return __awaiter(void 0, void 0, void 0,
                 accounts[accountIdx++] = new Account(id, total, earningAmount, earningRate);
             }
         }
-        return [2 /*return*/, new StockHistory(accounts)];
+        return [2 /*return*/, new StockHistory(accounts, principal, totalEarningRate)];
     });
 }); };

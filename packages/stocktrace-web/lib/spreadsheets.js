@@ -23,15 +23,18 @@ exports.addStockHistoryRow = async (stockHistory) => {
 
   const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id]
   const newRow = await sheet.addRow({
-    '날짜': '2020. 6. 19',
-    '배당주': '-20.45',
-    '펀드': '2.14',
-    '종합': '-1.29',
-    '총자산': '47621174',
+    '날짜': stockHistory.createdAt,
+    '배당주': stockHistory.accounts[0].earningRateStr(),
+    '펀드': stockHistory.accounts[1].earningRateStr(),
+    '종합': stockHistory.earningRateStr(),
+    '총자산': stockHistory.total() + '',
   });
 
-  console.log(newRow.rowNumber);
-  console.log(newRow.rowIndex);
+  const rowNumber = newRow.rowNumber;
 
-  console.log(newRow);
+  await sheet.loadCells(`A${rowNumber}:F${rowNumber}`)
+  const cell = sheet.getCellByA1(`F${rowNumber}`);
+  cell.formula = `=E${rowNumber}-E${rowNumber - 1}`;
+
+  await sheet.saveUpdatedCells();
 }
