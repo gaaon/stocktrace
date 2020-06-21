@@ -1,3 +1,7 @@
+import createDebug from 'debug';
+
+const debug = createDebug('stocktrace-web:ocr');
+
 export class StockHistory {
   private _createdAt: string = '';
 
@@ -29,8 +33,6 @@ export class StockHistory {
   }
 
   public earningRateStr(): string {
-    console.log(this._earningAmount);
-    console.log(this._principal);
     return (this._earningAmount / this._principal * 100).toFixed(2);
   }
 }
@@ -102,18 +104,20 @@ const parseTotalEarningRate = (line: string): number => {
 }
 
 export const parseOCR = async (ocrText: string): Promise<StockHistory> => {
+  debug(ocrText);
+
   const lines = ocrText.split('\n');
 
   let accountIdx = 0;
   const accounts: Account[] = [];
   let principal = 0;
-  let totalEarningRate = 0;
+  let totalEarningAmount = 0;
 
   for (let i = 0; i < lines.length; i++) {
     if (lines[i] === '총자산') {
       ++i;
       principal = parsePrincipal(lines[++i]);
-      totalEarningRate = parseTotalEarningRate(lines[++i]);
+      totalEarningAmount = parseTotalEarningRate(lines[++i]);
     }
 
     const id = parseAccountID(lines[i]);
@@ -129,6 +133,6 @@ export const parseOCR = async (ocrText: string): Promise<StockHistory> => {
     }
   }
 
-  return new StockHistory(accounts, principal, totalEarningRate);
+  return new StockHistory(accounts, principal, totalEarningAmount);
 };
 
