@@ -17,10 +17,6 @@ export default (app: Application) => {
 router.post('/upload',
   upload.single('img'),
   (req: Request, res: Response, next: NextFunction) => {
-
-    // 2020-06-19
-    const createdAt = req.body.date.replace(/-/g, '. ');
-
     (async () => {
       await initScheduler();
       debug('Initializing scheduler');
@@ -28,7 +24,7 @@ router.post('/upload',
       try {
         const res = await recognizeBuffer(req.file.buffer);
         const stockHistory = await parseOCR(res.data.text);
-        stockHistory.createdAt = createdAt;
+        stockHistory.createdAt = req.body.date;
       } catch (e) {
         console.error(e);
       } finally {
