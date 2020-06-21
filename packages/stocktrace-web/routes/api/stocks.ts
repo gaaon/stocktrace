@@ -3,6 +3,7 @@ import multer, { memoryStorage } from 'multer';
 import {closeScheduler, recognizeBuffer} from 'stocktrace-ocr';
 import {initScheduler, parseOCR} from 'stocktrace-ocr';
 import createDebug from 'debug';
+import {addStockHistoryRow} from '../../lib/spreadsheets';
 
 const debug = createDebug('stocktrace-web:server');
 
@@ -25,6 +26,9 @@ router.post('/upload',
         const res = await recognizeBuffer(req.file.buffer);
         const stockHistory = await parseOCR(res.data.text);
         stockHistory.createdAt = req.body.date;
+
+        await addStockHistoryRow(stockHistory);
+        debug('Success to add stockHistory to spreadsheet');
       } catch (e) {
         console.error(e);
       } finally {
