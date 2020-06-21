@@ -7,8 +7,11 @@ export class StockHistory {
 
   public constructor(
     private _accounts: Account[],
-    private _principal: number,
-    private _earningAmount: number) { }
+    private _principal: number) {
+    if (isNaN(_principal)) {
+      throw new Error('principal is not number');
+    }
+  }
 
   get accounts(): Account[] {
     return this._accounts;
@@ -37,6 +40,7 @@ export class StockHistory {
       return acc + cur.earningRate;
     }, 0);
   }
+
   public earningRateStr(): string {
     return (this.sumEarningRate() / this._principal * 100).toFixed(2);
   }
@@ -110,7 +114,6 @@ export const parseOCR = async (ocrText: string): Promise<StockHistory> => {
   let accountIdx = 0;
   const accounts: Account[] = [];
   let principal = 0;
-  let totalEarningAmount = 0;
 
   for (let i = 0; i < lines.length; i++) {
     if (lines[i] === '총자산') {
@@ -132,6 +135,6 @@ export const parseOCR = async (ocrText: string): Promise<StockHistory> => {
     }
   }
 
-  return new StockHistory(accounts, principal, totalEarningAmount);
+  return new StockHistory(accounts, principal);
 };
 
