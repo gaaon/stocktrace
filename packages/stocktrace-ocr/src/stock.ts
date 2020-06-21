@@ -29,6 +29,8 @@ export class StockHistory {
   }
 
   public earningRateStr(): string {
+    console.log(this._earningAmount);
+    console.log(this._principal);
     return (this._earningAmount / this._principal * 100).toFixed(2);
   }
 }
