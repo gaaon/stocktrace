@@ -35,14 +35,14 @@ export class StockHistory {
     }, 0);
   }
 
-  private sumEarningRate(): number {
+  private sumEarningAmount(): number {
     return this._accounts.reduce((acc: number, cur: Account) => {
-      return acc + cur.earningRate;
+      return acc + cur.earningAmount;
     }, 0);
   }
 
   public earningRateStr(): string {
-    return (this.sumEarningRate() / this._principal * 100).toFixed(2);
+    return (this.sumEarningAmount() / this._principal * 100).toFixed(2);
   }
 }
 
@@ -57,8 +57,8 @@ export class Account {
     return this._total;
   }
 
-  get earningRate(): number {
-    return this._earningRate;
+  get earningAmount(): number {
+    return this._earningAmount;
   }
 
   public earningRateStr(): string {
