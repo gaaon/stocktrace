@@ -14,7 +14,7 @@ export class StockHistory {
     if (/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(createdAt)) {
       this._createdAt = createdAt.replace(/-/g, '. ');
     } else {
-      throw new Error('invalid createdAt pattern');
+      throw new Error(`invalid createdAt pattern ${createdAt}`);
     }
   }
 
