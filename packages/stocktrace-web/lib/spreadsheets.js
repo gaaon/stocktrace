@@ -28,7 +28,6 @@ exports.addStockHistoryRow = async (stockHistory) => {
     '펀드': stockHistory.accounts[1].earningRateStr(),
     '종합': stockHistory.earningRateStr(),
     '총자산': stockHistory.total() + '',
-    'ocrText': stockHistory.ocrText,
   });
 
   const rowNumber = newRow.rowNumber;
@@ -38,4 +37,10 @@ exports.addStockHistoryRow = async (stockHistory) => {
   cell.formula = `=E${rowNumber}-E${rowNumber - 1}`;
 
   await sheet.saveUpdatedCells();
+
+  const sheet2 = doc.sheetsByIndex[1];
+  await sheet2.addRow({
+    '날짜': stockHistory.createdAt,
+    'ocrText': stockHistory.ocrText,
+  });
 }
