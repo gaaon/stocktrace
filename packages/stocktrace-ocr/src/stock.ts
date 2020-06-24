@@ -71,7 +71,7 @@ export class Account {
   }
 }
 
-const totalLinePattern = /([0-9,]+).*[원왼]/;
+const totalLinePattern = /([0-9,]+).*[원왼윈]/;
 const parseTotal = (line: string): number => {
   const matched = totalLinePattern.exec(line);
   if (!matched) {
