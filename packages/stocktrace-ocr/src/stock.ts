@@ -7,7 +7,8 @@ export class StockHistory {
 
   public constructor(
     private _accounts: Account[],
-    private _principal: number) {
+    private _principal: number,
+    private _ocrText: string) {
     if (isNaN(_principal)) {
       throw new Error('principal is not number');
     }
@@ -27,6 +28,10 @@ export class StockHistory {
 
   get createdAt(): string {
     return this._createdAt;
+  }
+
+  get ocrText(): string {
+    return this._ocrText;
   }
 
   public total(): number {
@@ -135,6 +140,6 @@ export const parseOCR = async (ocrText: string): Promise<StockHistory> => {
     }
   }
 
-  return new StockHistory(accounts, principal);
+  return new StockHistory(accounts, principal, ocrText);
 };
 
