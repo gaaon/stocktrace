@@ -145,3 +145,5 @@ $RECYCLE.BIN/
 data/**
 
 *.traineddata
+
+lib
